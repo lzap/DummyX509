@@ -1,16 +1,16 @@
 #!/bin/bash -e
 
 # server certificate common name (fqdn)
-SERVER_CN=${1:-nuc.lan}
+SERVER_CN=${1:-nuc}
 
 # server certificate alias (required: provide a dummy one)
-SERVER_ALIAS=${2:-nuc}
+SERVER_ALIAS=${2:-nuc.home.lan}
 
 # client certificate common name (hostname, uuid)
-CLIENT_CN=${3:-one.lan}
+CLIENT_CN=${3:-mone}
 
 SUBJECT="/C=US/ST=CA/O=Example.com"
-CA_CN="Example CA"
+CA_CN="Example CA TESTING"
 DAYS=9999
 PASSCA=pass:password_ca
 PASSSV=pass:password_server
@@ -33,7 +33,7 @@ if [[ -f server.crt ]]; then
 else
   openssl genrsa -passout $PASSSV -des3 -out server.key 4096
   openssl req -passin $PASSSV -new -key server.key -out server.csr \
-    -subj "$SUBJECT/CN=${SERVER_CN}" -addext "subjectAltName = DNS:$SERVER_ALIAS"
+    -subj "$SUBJECT/CN=${SERVER_CN}" -addext "subjectAltName=DNS:$SERVER_ALIAS"
   openssl x509 -req -passin $PASSCA -extfile /etc/pki/tls/openssl.cnf \
     -extensions usr_cert -days $DAYS -in server.csr \
     -CA ca.crt -CAkey ca.key -set_serial 01 -out server.crt
@@ -49,7 +49,7 @@ openssl req -passin $PASSCT -new -key $CLIENT.key \
   -out $CLIENT.csr -subj "$SUBJECT/CN=${CLIENT_CN}"
 openssl x509 -req -passin $PASSCA -days $DAYS \
   -extfile /etc/pki/tls/openssl.cnf -extensions usr_cert \
-  -in $CLIENT.csr -CA ca.crt -CAkey ca.key -set_serial 02 -out $CLIENT.crt
+  -in $CLIENT.csr -CA ca.crt -CAkey ca.key -set_serial $RANDOM -out $CLIENT.crt
 openssl x509 -purpose -in $CLIENT.crt
 openssl rsa -passin $PASSCT -in $CLIENT.key -out $CLIENT.key
 openssl x509 -in $CLIENT.crt -out $CLIENT.pem -outform PEM
