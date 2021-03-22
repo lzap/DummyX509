@@ -43,19 +43,20 @@ else
 fi
 
 # client.crt
-openssl genrsa -passout $PASSCT -des3 -out client.key 4096
-openssl req -passin $PASSCT -new -key client.key \
-  -out client.csr -subj "$SUBJECT/CN=${CLIENT_CN}"
+CLIENT="client-$CLIENT_CN"
+openssl genrsa -passout $PASSCT -des3 -out $CLIENT.key 4096
+openssl req -passin $PASSCT -new -key $CLIENT.key \
+  -out $CLIENT.csr -subj "$SUBJECT/CN=${CLIENT_CN}"
 openssl x509 -req -passin $PASSCA -days $DAYS \
   -extfile /etc/pki/tls/openssl.cnf -extensions usr_cert \
-  -in client.csr -CA ca.crt -CAkey ca.key -set_serial 02 -out client.crt
-openssl x509 -purpose -in client.crt
-openssl rsa -passin $PASSCT -in client.key -out client.key
-openssl x509 -in client.crt -out client.pem -outform PEM
+  -in $CLIENT.csr -CA ca.crt -CAkey ca.key -set_serial 02 -out $CLIENT.crt
+openssl x509 -purpose -in $CLIENT.crt
+openssl rsa -passin $PASSCT -in $CLIENT.key -out $CLIENT.key
+openssl x509 -in $CLIENT.crt -out $CLIENT.pem -outform PEM
 
 # print and verify
 openssl x509 -in ca.crt -text -noout
 openssl x509 -in server.crt -text -noout
-openssl x509 -in client.crt -text -noout
+openssl x509 -in $CLIENT.crt -text -noout
 openssl verify -CAfile ca.crt server.crt
-openssl verify -CAfile ca.crt client.crt
+openssl verify -CAfile ca.crt $CLIENT.crt
