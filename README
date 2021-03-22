@@ -1,0 +1,36 @@
+Dummy X509
+==========
+
+A shell script which creates a dummy CA, server and client cert. Use only for
+testing of SSL/HTTPs.
+
+Usage
+-----
+
+    ./generate.sh server.example.com alias.example.com client.example.com
+
+Generates a dummy CA cert (pem/crt formats) and a key:
+
+    ca.crt
+    ca.key
+    ca.pem
+
+A server cert (pem/crt) and a key:
+
+    server.crt
+    server.csr
+    server.key
+    server.pem
+
+And a client cert (pem/crt) and a key:
+
+    client.crt
+    client.csr
+    client.key
+    client.pem
+
+To generate another client just re-run the script with a different last
+argument. The script will never overwrite CA and server certs, but it WILL
+overwrite the client cert.
+
+Have fun!
