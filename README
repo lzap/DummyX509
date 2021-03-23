@@ -7,7 +7,7 @@ testing of SSL/HTTPS.
 Usage
 -----
 
-    ./generate.sh server.example.com alias.example.com client.example.com
+    ./generate.sh server.example.com client.example.com
 
 Generates a dummy CA cert (pem/crt formats) and a key:
 

@@ -1,13 +1,13 @@
 #!/bin/bash -e
 
-# server certificate common name (fqdn)
+# server certificate common name
 SERVER_CN=${1:-nuc}
 
 # server certificate alias (required: provide a dummy one)
-SERVER_ALIAS=${2:-nuc.home.lan}
+SERVER_ALIAS=${2:-_does_not_work_yet_see_below_}
 
-# client certificate common name (hostname, uuid)
-CLIENT_CN=${3:-mone}
+# client certificate common name
+CLIENT_CN=${2:-mone}
 
 SUBJECT="/C=US/ST=CA/O=Example.com"
 CA_CN="Example CA TESTING"
@@ -37,6 +37,10 @@ else
   openssl x509 -req -passin $PASSCA -extfile /etc/pki/tls/openssl.cnf \
     -extensions usr_cert -days $DAYS -in server.csr \
     -CA ca.crt -CAkey ca.key -set_serial 01 -out server.crt
+    # the following argument was merged into the project Jan 2021
+    # and uncommenting it will make alias to be included
+    # https://github.com/openssl/openssl/pull/13711
+    #-copy_extensions
   openssl x509 -purpose -in server.crt
   openssl rsa -passin $PASSSV -in server.key -out server.key
   openssl x509 -in server.crt -out server.pem -outform PEM
