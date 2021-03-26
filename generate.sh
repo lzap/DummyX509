@@ -1,13 +1,13 @@
 #!/bin/bash -e
 
 # server certificate common name
-SERVER_CN=${1:-nuc}
+SERVER_CN=${1:-localhost}
 
 # server certificate alias (required: provide a dummy one)
 SERVER_ALIAS=${2:-_does_not_work_yet_see_below_}
 
 # client certificate common name
-CLIENT_CN=${2:-mone}
+CLIENT_CN=${2:-localhost}
 
 SUBJECT="/C=US/ST=CA/O=Example.com"
 CA_CN="Example CA TESTING"

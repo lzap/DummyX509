@@ -1,0 +1,7 @@
+Dummy localhost SSL
+===================
+
+This directory contains dummy CA, dummy server cert/key issued to "localhost"
+and a dummy client cert/key issued to "localhost" common name.
+
+Certs were generated in Spring 2021 and will expire in 9999 days.
