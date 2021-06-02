@@ -1,2 +1,2 @@
 #!/bin/sh
-rm *.{csr,crt,pem,key}
+rm *.{csr,crt,pem,key} openssl.cnf

@@ -7,7 +7,7 @@ testing of SSL/HTTPS.
 Usage
 -----
 
-    ./generate.sh server.example.com client.example.com
+    ./generate.sh server_ca_name server.alias.example.com client_ca_name client.alias.example.com
 
 Generates a dummy CA cert (pem/crt formats) and a key:
 
@@ -24,13 +24,26 @@ A server cert (pem/crt) and a key:
 
 And a client cert (pem/crt) and a key:
 
-    client-client.example.com.crt
-    client-client.example.com.csr
-    client-client.example.com.key
-    client-client.example.com.pem
+    client-client_ca_name.crt
+    client-client-ca_name.csr
+    client-client-ca_name.key
+    client-client-ca_name.pem
 
 To generate another client just re-run the script with a different last
 argument. The script will never overwrite CA and server certs, but it WILL
 overwrite the client cert so use with care.
+
+Aliases
+-------
+
+Both server and client certificates have common names (CN) and also an alias
+that is generated as Subject Alternative Name extension. Note that in 2020 you
+need to have SAN for TLS as most of the modern browsers and OSes refuse
+certificates without SAN: https://support.apple.com/en-us/HT210176
+
+Typically if your server is running under server.example.com you want to set
+both CN and SAN to the same value:
+
+    ./generate.sh server.example.com server.example.com client.example.com client.example.com
 
 Have fun!

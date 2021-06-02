@@ -1,4 +1,7 @@
-*.csr
-*.crt
-*.pem
-*.key
+/*.csr
+/*.crt
+/*.pem
+/*.key
+/*.txt
+/openssl.cnf
+/backup-*/
