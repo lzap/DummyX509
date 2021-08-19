@@ -14,7 +14,8 @@ CLIENT_ALIAS=${4:-localhost}
 
 SUBJECT="/C=US/ST=CA/O=Example.com"
 CA_CN="Example CA TESTING"
-DAYS=9999
+# https://support.apple.com/en-us/HT210176
+DAYS=824
 PASSCA=pass:password_ca
 PASSSV=pass:password_server
 PASSCT=pass:password_client
@@ -26,7 +27,9 @@ if [[ ! -f openssl.cnf ]]; then
   cp -f /etc/pki/tls/openssl.cnf . || true
   cp -f /usr/lib/ssl/openssl.cnf . || true
   sed -i '/\[ usr_cert \]/a \
-  subjectAltName=${ENV::SAN}' openssl.cnf
+subjectAltName=${ENV::SAN}' openssl.cnf
+  sed -i '/\[ usr_cert \]/a \
+extendedKeyUsage = serverAuth, clientAuth, codeSigning, emailProtection' openssl.cnf
 fi
 
 # ca.crt
@@ -48,7 +51,7 @@ else
   openssl genrsa -passout $PASSSV -des3 -out server.key 4096
   openssl req -passin $PASSSV -new -key server.key -out server.csr \
     -subj "$SUBJECT/CN=${SERVER_CN}" \
-    -addext "subjectAltName=$SAN"
+    -addext "subjectAltName=$SAN" -addext "extendedKeyUsage=serverAuth"
   openssl x509 -req -passin $PASSCA -extfile ./openssl.cnf \
     -extensions usr_cert -days $DAYS -in server.csr \
     -CA ca.crt -CAkey ca.key -set_serial 01 -out server.crt
